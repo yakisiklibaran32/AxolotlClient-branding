@@ -12,6 +12,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinMinecraftClient {
 
 	/**
+	 * @author moehreag
+	 */
+	@Overwrite
+	public boolean isModded() {
+		return false;
+	}
+
+	/**
 	 * @author meohreag
 	 * @reason Customize Window title for use in AxolotlClient
 	 */
@@ -23,6 +31,18 @@ public class MixinMinecraftClient {
 		stringBuilder.append(SharedConstants.getGameVersion().getName());
 
 		return stringBuilder.toString();
+	}
+
+	@Redirect(
+		method = "method_1509", // "Is Modded" lambda in addSystemDetailsToCrashReport
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/lang/Class;getSigners()[Ljava/lang/Object;"
+		),
+		remap = false
+	)
+	private static Object[] onGetSigners(Class aClass) {
+		return new Object[0]; // not null
 	}
 
 	@Redirect(
