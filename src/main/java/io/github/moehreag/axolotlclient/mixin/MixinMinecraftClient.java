@@ -1,18 +1,29 @@
-package net.logandark.branding.mixin;
+package io.github.moehreag.axolotlclient.mixin;
 
+import io.github.moehreag.axolotlclient.Axolotlclient;
+import io.github.moehreag.axolotlclient.util.DiscordRPC;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+/* Debugging...
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import io.github.moehreag.branding.Axolotlclient;
+*/
 
 @Mixin(MinecraftClient.class)
 public class MixinMinecraftClient {
 
 	/**
 	 * @author moehreag
+	 * @reason Remove modded signs because they're ugly
 	 */
 	@Overwrite
 	public boolean isModded() {
@@ -26,11 +37,7 @@ public class MixinMinecraftClient {
 	@Overwrite
 	private String getWindowTitle() {
 
-		StringBuilder stringBuilder = new StringBuilder("AxolotlClient");
-		stringBuilder.append(" ");
-		stringBuilder.append(SharedConstants.getGameVersion().getName());
-
-		return stringBuilder.toString();
+		return "AxolotlClient" + " " +SharedConstants.getGameVersion().getName();
 	}
 
 	@Redirect(
@@ -75,5 +82,12 @@ public class MixinMinecraftClient {
 		}
 
 		return versionType;
+	}
+
+
+	@Inject(method = "tick", at = @At("HEAD"))
+	public void TickClient(CallbackInfo ci){
+		DiscordRPC.update();
+		Axolotlclient.TickClient();
 	}
 }
