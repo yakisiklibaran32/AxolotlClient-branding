@@ -33,6 +33,8 @@ public class AxolotlclientConfig {
 
     public final BooleanOption enableRPC = new BooleanOption("enableRPC", true);
     public final BooleanOption showActivity = new BooleanOption("showActivity", true);
+    public final ColorOption loadingScreenColor = new ColorOption("loadingBgColor", new Color(-1));
+    public final BooleanOption nightMode = new BooleanOption("nightMode", false);
 
     public final BooleanOption rotateWorld = new BooleanOption("rotateWorld", false);
 
@@ -97,6 +99,8 @@ public class AxolotlclientConfig {
 
         general.add(enableRPC);
         general.add(showActivity);
+        general.add(loadingScreenColor);
+        general.add(nightMode);
 
         rendering.add(customSky);
         rendering.add(showSunMoon);
